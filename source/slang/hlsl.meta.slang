@@ -16169,28 +16169,28 @@ float3 ObjectRayDirection()
 
 [NonUniformReturn]
 [require(cuda, raytracing_anyhit_closesthit_intersection)]
-void __optixGetObjectToWorldTransformMatrix(out float4x3 transform)
+void __optixGetObjectToWorldTransformMatrix(out float3x4 transform)
 {
-    __intrinsic_asm "optixGetObjectToWorldTransformMatrix($0)";
+    __intrinsic_asm "optixGetObjectToWorldTransformMatrix((float*)($0))";
 }
 
 [NonUniformReturn]
 [require(cuda, raytracing_anyhit_closesthit_intersection)]
-void __optixGetWorldToObjectTransformMatrix(out float4x3 transform)
+void __optixGetWorldToObjectTransformMatrix(out float3x4 transform)
 {
-    __intrinsic_asm "optixGetWorldToObjectTransformMatrix($0)";
+    __intrinsic_asm "optixGetWorldToObjectTransformMatrix((float*)($0))";
 }
 
 [NonUniformReturn]
-[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection, sm_4_0_version)]
+[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection)]
 float3x4 ObjectToWorld3x4()
 {
     __target_switch
     {
     case cuda: {
-        float4x3 transform;
+        float3x4 transform;
         __optixGetObjectToWorldTransformMatrix(transform);
-        return transpose(transform);
+        return transform;
     }
     case hlsl:  __intrinsic_asm "ObjectToWorld3x4";
     case glsl: __intrinsic_asm "transpose(gl_ObjectToWorldEXT)";
@@ -16204,15 +16204,15 @@ float3x4 ObjectToWorld3x4()
 }
 
 [NonUniformReturn]
-[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection, sm_4_0_version)]
+[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection)]
 float3x4 WorldToObject3x4()
 {
     __target_switch
     {
     case cuda: {
-        float4x3 transform;
+        float3x4 transform;
         __optixGetWorldToObjectTransformMatrix(transform);
-        return transpose(transform);
+        return transform;
     }
     case hlsl:  __intrinsic_asm "WorldToObject3x4";
     case glsl: __intrinsic_asm "transpose(gl_WorldToObjectEXT)";
@@ -16226,15 +16226,15 @@ float3x4 WorldToObject3x4()
 }
 
 [NonUniformReturn]
-[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection)]
+[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection, sm_4_0_version)]
 float4x3 ObjectToWorld4x3()
 {
     __target_switch
     {
     case cuda: {
-        float4x3 transform;
+        float3x4 transform;
         __optixGetObjectToWorldTransformMatrix(transform);
-        return transform;
+        return transpose(transform);
     }
     case hlsl:  __intrinsic_asm "ObjectToWorld4x3";
     case glsl: __intrinsic_asm "(gl_ObjectToWorldEXT)";
@@ -16247,15 +16247,15 @@ float4x3 ObjectToWorld4x3()
 }
 
 [NonUniformReturn]
-[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection)]
+[require(cuda_glsl_hlsl_spirv, raytracing_anyhit_closesthit_intersection, sm_4_0_version)]
 float4x3 WorldToObject4x3()
 {
     __target_switch
     {
     case cuda: {
-        float4x3 transform;
+        float3x4 transform;
         __optixGetWorldToObjectTransformMatrix(transform);
-        return transform;
+        return transpose(transform);
     }
     case hlsl:  __intrinsic_asm "WorldToObject4x3";
     case glsl: __intrinsic_asm "(gl_WorldToObjectEXT)";
